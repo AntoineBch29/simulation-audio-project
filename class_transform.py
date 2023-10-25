@@ -35,6 +35,30 @@ class fourier_signal_and_mask_power(object):
         sample["X"]=np.log10(np.abs(self.stft_object(sample["Noised_Waveform"]))**2)
         sample["Y"]=np.abs(self.stft_object(sample["Waveform"]))**2>np.abs(self.stft_object(sample["Noise"]))**2
         return sample
+class normalize(object):
+    def __call__(self,y):
+        return (y-np.mean(y))/np.max(np.abs(np.min(y)),np.abs(np.max(y)))  
+class noised_waveform(object):
+    def __init__(self, range):
+        self.range = range
+        self.normalization=normalize()
+    def __call__(self,sample):
+        randomNums = np.random.poisson(range, 1)
+        randomInts = np.round(randomNums)
+        if randomInts<1:
+            randomInts=1
+        sum_alpha=0
+        sample["Waveform"]=self.normalization(sample["Waveform"])
+        sample["Noise"]=self.normalization(librosa.load('./Data/Raw/babble_16k.wav',sr=16000))
+        n=np.zeros_like(sample["Noise"])
+        for i in range(randomInts):
+            alpha=np.random()
+            sum_alpha+=alpha
+            crop_noise=np.random.randint(0,len(sample["Waveform"]))
+            n+=sample["Noise"][crop_noise:crop_noise+len(sample["Waveform"])]
+        sample["Noise"]=n/sum_alpha  
+        sample["Noised_Waveform"]=self.normalization(sample["Waveform"]+sample["Noise"])
+        return sample
 class istft(object):
     def __init__(self, n_fft, hop_length, win_length):
         self.n_fft = n_fft
@@ -42,28 +66,7 @@ class istft(object):
         self.win_length = win_length
     def __call__(self):
         return librosa.istft(sample["Waveform"], hop_length=self.hop_length, n_fft=self.n_fft, win_length=self.win_length, length=len(sample["Waveform"]),sr=sample["Sample_rate"])
-class normalize(object):
-    def __call__(self,y):
-        return (y-np.mean(y))/np.max(np.abs(np.min(y)),np.abs(np.max(y)))  
-class noised_waveform(object):
-    def __init__(self, range):
-        self.range = range
-    def __call__(self,sample):
-        randomNums = np.random.poisson(1.5, 1)
-        randomInts = np.round(randomNums)
-        if randomInts<1:
-            randomInts=1
-        sum_alpha=0
-        sample["Noise"]=librosa.load("C:/Users/pemba/Downloads/babble_16k.wav",sr=16000)
-        n=np.zeros_like(sample["Noise"])
-        for i in range(randomInts):
-            alpha=np.random()
-            sum_alpha+=alpha
-            crop_noise=np.random.randint(0,len(sample["Waveform"]))
-            n+=sample["Noise"][crop_noise:crop_noise+len(sample["Waveform"])]
-        sample["Noise"]=n/sum_alpha    
-        return sample
-    
+ 
     
     
     
