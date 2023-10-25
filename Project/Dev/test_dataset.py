@@ -2,6 +2,7 @@ from pathlib import Path
 import sys
 import torch
 from tqdm import tqdm
+from scipy.io.wavfile import write
 
 CUR_DIR_PATH = Path(__file__).resolve()
 ROOT = CUR_DIR_PATH.parents[2]
@@ -20,15 +21,17 @@ from Data.Datamodule.Dataset import DatasetLibrispeech
 #     )
 
 dataset = DatasetLibrispeech()
-print(dataset[0]["Waveform"].numpy()[0].shape)
+n = 50
+print(dataset[n]["Waveform"].numpy()[0].shape)
 
 from class_transform import numpy_waveform,clip_and_pad
 a = numpy_waveform()
 b = clip_and_pad(160000)
 
 
-sample = b(a(dataset[0]))
-print(len(sample))
+sample = b(a(dataset[n]))
+print(len(sample["Waveform"]))
+write('test.wav',16000,sample["Waveform"])
 # lis = []
 # for i in tqdm(dataset):
 #     lis.append(i["Waveform"].shape[1])
