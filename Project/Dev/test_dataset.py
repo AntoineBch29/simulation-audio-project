@@ -20,7 +20,15 @@ from Data.Datamodule.Dataset import DatasetLibrispeech
 #     )
 
 dataset = DatasetLibrispeech()
-print(dataset[0]["Sample_rate"])
+print(dataset[0]["Waveform"].numpy()[0].shape)
+
+from class_transform import numpy_waveform,clip_and_pad
+a = numpy_waveform()
+b = clip_and_pad(160000)
+
+
+sample = b(a(dataset[0]))
+print(len(sample))
 # lis = []
 # for i in tqdm(dataset):
 #     lis.append(i["Waveform"].shape[1])
