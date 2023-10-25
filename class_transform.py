@@ -3,6 +3,22 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 
+class numpy_waveform(object):
+    def __call__(self,sample):
+        sample["Waveform"] = sample["Waveform"].numpy()[0]
+        return sample
+class clip_and_pad(object):
+    def __init__(self,l):
+        self.l = l
+    def __call__(self, sample):
+        
+        while(len(sample["Waveform"])<self.l):
+                print("coucou")
+                sample["Waveform"] = np.tile(sample["Waveform"],2)
+        if len(sample["Waveform"])>self.l:
+            sample["Waveform"] = sample["Waveform"][:self.l]
+        return sample
+
 class stft(object):
     def __init__(self, n_fft, hop_length, win_length):
         self.n_fft = n_fft
