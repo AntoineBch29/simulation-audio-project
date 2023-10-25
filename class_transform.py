@@ -54,12 +54,14 @@ class noised_waveform(object):
         if randomInts<1:
             randomInts=1
         sum_alpha=0
+        sample["Noise"]=librosa.load("C:/Users/pemba/Downloads/babble_16k.wav",sr=16000)
+        n=np.zeros_like(sample["Noise"])
         for i in range(randomInts):
             alpha=np.random()
             sum_alpha+=alpha
-            crop_noise=np.random.randint
-            sample["Noise"]+=
-        sample["Noise"]=    
+            crop_noise=np.random.randint(0,len(sample["Waveform"]))
+            n+=sample["Noise"][crop_noise:crop_noise+len(sample["Waveform"])]
+        sample["Noise"]=n/sum_alpha    
         return sample
     
     
@@ -76,7 +78,7 @@ if __name__ == "__main__" :
     k=p()
     power_amp=power(k)
     S = power_amp()
-    u, sr2 = librosa.load("C:/Users/pemba/Downloads/babble_16k.wav",sr=16000)
+    u, sr2 = librosa.load('./Data/Raw/babble_16k.wav',sr=16000)
     print(len(u),sr)
     p2 = stft(u, len(u), 2048, 1024)
     k2=p2()
