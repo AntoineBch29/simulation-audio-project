@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 import torch
+from tqdm import tqdm
 
 CUR_DIR_PATH = Path(__file__).resolve()
 ROOT = CUR_DIR_PATH.parents[2]
@@ -17,6 +18,14 @@ from Data.Datamodule.Dataset import DatasetLibrispeech
 #     shuffle=True,
 #     num_workers=cfg["training"]["num_workers"]
 #     )
-dataset = DatasetLibrispeech()
 
-print(len(dataset))
+dataset = DatasetLibrispeech()
+print(dataset[0]["Sample_rate"])
+# lis = []
+# for i in tqdm(dataset):
+#     lis.append(i["Waveform"].shape[1])
+
+# import matplotlib.pyplot as plt
+# plt.figure()
+# plt.hist(lis,100)
+# plt.show()
