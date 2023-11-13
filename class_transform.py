@@ -3,6 +3,7 @@ import librosa
 import numpy as np
 import matplotlib.pyplot as plt
 from torchvision.transforms import Compose
+import torch
 
 class numpy_waveform(object):
     def __call__(self,sample):
@@ -32,8 +33,8 @@ class fourier_signal_and_mask_power(object):
     def __init__(self,n_fft, hop_length,win_length):
         self.stft_object=stft(n_fft, hop_length,win_length)
     def __call__(self, sample):
-        sample["X"]=np.log10(np.abs(self.stft_object(sample,"Noised_Waveform"))**2)
-        sample["Y"]=np.abs(self.stft_object(sample,"Waveform"))**2>np.abs(self.stft_object(sample,"Noise"))**2
+        sample["x"]=np.log10(np.abs(self.stft_object(sample,"Noised_Waveform"))**2)
+        sample["y"]=(np.abs(self.stft_object(sample,"Waveform"))**2>np.abs(self.stft_object(sample,"Noise"))**2).astype(int)
         return sample
     # standardisation sur l'ensemble des données 
 # class normalize(object):
@@ -71,12 +72,21 @@ class istft(object):
         self.win_length = win_length
     def __call__(self,sample,name_signal):
         return librosa.istft(sample[name_signal], hop_length=self.hop_length, n_fft=self.n_fft, win_length=self.win_length, length=len(sample["Waveform"]))
- 
+
+class to_tensor(object):
+    def __call__(self, sample):
+        sample["x"] = torch.from_numpy(sample["x"])
+        sample["y"] = torch.from_numpy(sample["y"]).to(torch.float32)
+        sample["x"] = torch.unsqueeze(sample["x"], dim=0)
+        sample["y"] = torch.unsqueeze(sample["y"], dim=0)
+        return sample
+
 transforms = Compose([
         numpy_waveform(),
         clip_and_pad(160000),
         noised_waveform(range=1.5,snr=5),
         fourier_signal_and_mask_power(n_fft=1024, hop_length=512, win_length=1024),
+        to_tensor(),
     ])
     
     
@@ -88,9 +98,9 @@ if __name__ == "__main__" :
     sr=sample["Sample_rate"]
     sample = transforms(sample)
     fig, ax = plt.subplots(ncols=2)
-    img = librosa.display.specshow(sample["Y"], y_axis='log', x_axis='time', ax=ax[0],sr=sample["Sample_rate"], cmap='magma')
+    img = librosa.display.specshow(sample["y"], y_axis='log', x_axis='time', ax=ax[0],sr=sample["Sample_rate"], cmap='magma')
     ax[0].set_title('signal ')
-    img = librosa.display.specshow(sample["X"], y_axis='log', x_axis='time', ax=ax[1],sr=sample["Sample_rate"], cmap='magma')
+    img = librosa.display.specshow(sample["x"], y_axis='log', x_axis='time', ax=ax[1],sr=sample["Sample_rate"], cmap='magma')
     ax[1].set_title('noise')
     fig.colorbar(img, ax=ax, format="%+2.0f dB")
     signal_stft=stft(n_fft=1024, hop_length=512, win_length=1024)

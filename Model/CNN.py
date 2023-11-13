@@ -10,15 +10,12 @@ class CNN(torch.nn.Module):
         self.conv2 = torch.nn.Conv2d(4, 8, 3,stride=1,padding=1)
         self.conv3 = torch.nn.Conv2d(8, 1, 3,stride=1,padding=1)
         self.relu = torch.nn.ReLU()
+        self.sig = torch.nn.Sigmoid()
 
     def forward(self, x):
-        print(x.shape)
         x = self.relu(self.conv1(x))
-        print(x.shape)
         x = self.relu(self.conv2(x))
-        print(x.shape)
-        x = self.relu(self.conv3(x))
-        print(x.shape)
+        x = self.sig(self.conv3(x))
         return x
 
 if __name__=="__main__":

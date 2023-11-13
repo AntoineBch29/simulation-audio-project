@@ -4,3 +4,4 @@ sandbox.py
 *.pyc
 Config/__pycache__/test.cpython-39.pyc
 Data/Datamodule/__pycache__/Dataset.cpython-39.pyc
+lightning_logs/

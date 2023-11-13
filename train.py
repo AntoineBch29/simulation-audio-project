@@ -1,18 +1,20 @@
 from Data.Datamodule.Datamodule import MyDataModule
 import lightning as L
 
-from Model.LightningModule import autoencoder
+from Model.LightningModule import Module
 
-datamodule = MyDataModule(8,2)
+if __name__ == "__main__":
+    model = Module()
+    datamodule = MyDataModule(batch_size=2,num_workers=1)
 
-# Init trainer
-trainer = L.Trainer(
-    max_epochs=3,
-    accelerator="auto",
-    devices=1,
-)
-# Pass the datamodule as arg to trainer.fit to override model hooks :)
-trainer.fit(autoencoder, datamodule)
+    # Init trainer
+    trainer = L.Trainer(
+        max_epochs=3,
+        accelerator="auto",
+        devices=1,
+    )
+    # Pass the datamodule as arg to trainer.fit to override model hooks :)
+    trainer.fit(model, datamodule)
 
 
 
