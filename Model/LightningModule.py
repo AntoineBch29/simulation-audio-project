@@ -2,7 +2,6 @@ import os
 from torch import optim, nn, utils, Tensor
 from torchvision.transforms import ToTensor
 import lightning.pytorch as pl
-from Model.model_test import encoder, decoder
 
 
 
@@ -16,13 +15,26 @@ class Module(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         # training_step defines the train loop.
         # it is independent of forward
-        x, y = batch
+        x = batch["x"]
+        y = batch["y"]
         x = x.view(x.size(0), -1)
         z = self.encoder(x)
         x_hat = self.decoder(z)
         loss = nn.functional.mse_loss(x_hat, x)
         # Logging to TensorBoard (if installed) by default
         self.log("train_loss", loss)
+        return loss
+    def validation_step(self, batch, batch_idx):
+        # training_step defines the train loop.
+        # it is independent of forward
+        x = batch["x"]
+        y = batch["y"]
+        x = x.view(x.size(0), -1)
+        z = self.encoder(x)
+        x_hat = self.decoder(z)
+        loss = nn.functional.mse_loss(x_hat, x)
+        # Logging to TensorBoard (if installed) by default
+        self.log("val_loss", loss)
         return loss
 
     def configure_optimizers(self):
@@ -31,4 +43,4 @@ class Module(pl.LightningModule):
 
 
 # init the autoencoder
-autoencoder = Module(encoder, decoder)
+autoencoder = Module(Encoder, Decoder)
