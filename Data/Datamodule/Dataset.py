@@ -1,6 +1,6 @@
 from torchaudio.datasets import LIBRISPEECH
 import torch
-
+from class_transform import transforms
 
 
 
@@ -19,4 +19,4 @@ class DatasetLibrispeech():
             "Chapter_ID":item[4],
             "Utterance_ID":item[5],
             }
-        return sample
+        return transforms(sample)

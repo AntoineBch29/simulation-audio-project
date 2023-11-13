@@ -2,6 +2,7 @@ from typing import Any
 import librosa
 import numpy as np
 import matplotlib.pyplot as plt
+from torchvision.transforms import Compose
 
 class numpy_waveform(object):
     def __call__(self,sample):
@@ -71,7 +72,12 @@ class istft(object):
     def __call__(self,sample,name_signal):
         return librosa.istft(sample[name_signal], hop_length=self.hop_length, n_fft=self.n_fft, win_length=self.win_length, length=len(sample["Waveform"]))
  
-    
+transforms = Compose([
+        numpy_waveform(),
+        clip_and_pad(160000),
+        noised_waveform(range=1.5,snr=5),
+        fourier_signal_and_mask_power(n_fft=1024, hop_length=512, win_length=1024),
+    ])
     
     
 if __name__ == "__main__" :
@@ -80,12 +86,7 @@ if __name__ == "__main__" :
     dataset=DatasetLibrispeech()
     sample=dataset[0]
     sr=sample["Sample_rate"]
-    a=numpy_waveform()
-    b=clip_and_pad(160000)
-    noise_create=noised_waveform(range=1.5,snr=15)
-    sample=noise_create(b(a(sample)))
-    p = fourier_signal_and_mask_power(n_fft=1024, hop_length=512, win_length=1024)
-    sample=p(sample)
+    sample = transforms(sample)
     fig, ax = plt.subplots(ncols=2)
     img = librosa.display.specshow(sample["Y"], y_axis='log', x_axis='time', ax=ax[0],sr=sample["Sample_rate"], cmap='magma')
     ax[0].set_title('signal ')

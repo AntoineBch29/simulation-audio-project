@@ -20,16 +20,19 @@ from Data.Datamodule.Dataset import DatasetLibrispeech
 #     num_workers=cfg["training"]["num_workers"]
 #     )
 
-dataset = DatasetLibrispeech()
-n = 50
-print(dataset[n]["Waveform"].numpy()[0].shape)
 
+generator = torch.Generator().manual_seed(42)
+dataset = DatasetLibrispeech()
+train_set, test_set = torch.utils.data.random_split(dataset, [0.8, 0.2], generator=generator)
+n = 50
+print(train_set[n]["Waveform"].numpy()[0].shape)
+print(len(train_set),len(test_set),len(dataset))
 from class_transform import numpy_waveform,clip_and_pad
 a = numpy_waveform()
 b = clip_and_pad(160000)
 
 
-sample = b(a(dataset[n]))
+sample = b(a(train_set[n]))
 print(len(sample["Waveform"]))
 write('test.wav',16000,sample["Waveform"])
 # lis = []
