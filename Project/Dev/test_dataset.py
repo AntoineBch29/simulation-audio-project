@@ -24,6 +24,6 @@ from Data.Datamodule.Dataset import DatasetLibrispeech
 generator = torch.Generator().manual_seed(42)
 dataset = DatasetLibrispeech()
 train_set, test_set = torch.utils.data.random_split(dataset, [0.8, 0.2], generator=generator)
-n = 50
+n = 501
 print(train_set[n].keys())
-print(train_set[n]["x"].shape)
+print(train_set[n]["Chapter_ID"])
