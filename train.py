@@ -20,6 +20,7 @@ if __name__ == "__main__":
         accelerator="auto",
         devices=1,
         logger=tb_logger,
+        callbacks=[checkpoint_callback],
     )
     # Pass the datamodule as arg to trainer.fit to override model hooks :)
     trainer.fit(model, datamodule)
