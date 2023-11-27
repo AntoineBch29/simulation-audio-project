@@ -4,13 +4,14 @@ from torchvision.transforms import ToTensor
 import lightning.pytorch as pl
 from Model.CNN import CNN
 from Model.Tester import tester,valider
+from Model.UNet import UNet
 
 # define the LightningModule
 class Module(pl.LightningModule):
     def __init__(self, log_dir,save=False):
         super().__init__()
         self.tester = tester(log_path=log_dir, save=save)
-        self.model = CNN(513)
+        self.model = UNet()
         self.save_hyperparameters()
 
     def training_step(self, batch, batch_idx):
