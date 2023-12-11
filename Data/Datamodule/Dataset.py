@@ -6,7 +6,7 @@ from class_transform import transforms
 
 class DatasetLibrispeech():
     def __init__(self) -> None:
-        self.LibriSpeech = LIBRISPEECH('./Data/Raw', 'dev-clean')
+        self.LibriSpeech = LIBRISPEECH('./Data/Raw', 'dev-clean',download=True)
     def __len__(self):
         return len(self.LibriSpeech)
     def __getitem__(self,num):
