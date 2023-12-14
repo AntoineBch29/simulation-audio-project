@@ -92,7 +92,7 @@ transforms = Compose([
     ])
     
 def retour(signal,l):
-    return librosa.istft(signal.numpy(),n_fft=1024, hop_length=512, win_length=1024, length=l)
+    return librosa.istft(signal.cpu().numpy(),n_fft=1024, hop_length=512, win_length=1024, length=l)
 
 if __name__ == "__main__" :
     from Data.Datamodule.Dataset import DatasetLibrispeech

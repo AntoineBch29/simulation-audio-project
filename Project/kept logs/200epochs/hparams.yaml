@@ -1,0 +1,2 @@
+log_dir: Logs/lightning_logs/version_5
+save: false

@@ -19,7 +19,7 @@ class tester(object):
                 write(curr_path +'Waveform.wav',sr,batch["Waveform"][i_batch].numpy())
                 write(curr_path +'Noised_Waveform.wav',sr,batch["Noised_Waveform"][i_batch].numpy())
                 write(curr_path +'Output.wav',sr,output[0])
-            snr[i_batch] = 10*np.log10((batch["Waveform"][i_batch]**2).sum()/((batch["Waveform"][i_batch]-output)**2).sum())
+            snr[i_batch] = 10*np.log10((batch["Waveform"][i_batch].cpu()**2).sum()/((batch["Waveform"][i_batch].cpu()-output)**2).sum())
         return snr
 
 class valider(object):
