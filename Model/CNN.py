@@ -2,7 +2,7 @@ import torch
 
 class CNN(torch.nn.Module):
 
-    def __init__(self,stft_frequency_size):
+    def __init__(self):
         super(CNN, self).__init__()
         #1 channel input; 4 channels output; kernel on all frequencies stft_frequency_size over 3 temporal samples, no stride but padding horizontal 
         self.conv1 = torch.nn.Conv2d(1, 4, 3,stride=1,padding=1)
@@ -21,5 +21,5 @@ class CNN(torch.nn.Module):
 if __name__=="__main__":
 
     my_tensor = torch.rand(1, 513, 313)
-    mon_modele=CNN(513)
+    mon_modele=CNN()
     mon_modele(my_tensor)
