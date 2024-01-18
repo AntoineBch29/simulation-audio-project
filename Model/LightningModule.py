@@ -11,6 +11,7 @@ class Module(pl.LightningModule):
     def __init__(self, log_dir,save=False):
         super().__init__()
         self.tester = tester(log_path=log_dir, save=save)
+        self.valider = valider(log_path=log_dir, save=save)
         self.model = UNet()
         self.save_hyperparameters()
 
@@ -30,7 +31,7 @@ class Module(pl.LightningModule):
         x = batch["x"]
         y = batch["y"]
         y_hat = self.model(x)
-        snr = self.tester(batch,y_hat)
+        snr = self.valider(batch,y_hat)
         loss = nn.functional.mse_loss(y_hat, y)
         # Logging to TensorBoard (if installed) by default
         self.log("val_loss", loss)
