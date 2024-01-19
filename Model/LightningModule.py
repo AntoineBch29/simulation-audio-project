@@ -12,7 +12,7 @@ class Module(pl.LightningModule):
         super().__init__()
         self.tester = tester(log_path=log_dir, save=save)
         self.valider = valider(log_path=log_dir, save=save)
-        self.model = UNet()
+        self.model = CNN()
         self.save_hyperparameters()
 
     def training_step(self, batch, batch_idx):

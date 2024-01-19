@@ -5,7 +5,7 @@ from Data.Datamodule.Datamodule import MyDataModule
 
 if __name__ == "__main__":
     tb_logger = L.pytorch.loggers.TensorBoardLogger(save_dir="Logs/")
-    model = Module.load_from_checkpoint("Logs/lightning_logs/version_3/checkpoints/epoch=4-step=325.ckpt",save=True)
+    model = Module.load_from_checkpoint("Logs/version_8/epoch=188-val_loss=0.18-val_snr=12.56.ckpt",save=True)
     datamodule = MyDataModule(batch_size=4,num_workers=2)
     # Init trainer
     trainer = L.Trainer(

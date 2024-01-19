@@ -34,7 +34,7 @@ class tester(object):
             snr_th[i_batch] = 10*np.log10((batch["Waveform"][i_batch].cpu()**2).sum()/((batch["Waveform"][i_batch].cpu()-Waveform_phase)**2).sum())
             snr_gain[i_batch] = snr[i_batch]-batch["snr"][i_batch]
             snr_gain_th[i_batch] = snr_th[i_batch]-batch["snr"][i_batch]
-        return snr, snr_gain, snr_gain_th
+        return snr
 
 class valider(object):
     def __init__(self, log_path,save = False):

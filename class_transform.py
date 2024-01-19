@@ -61,6 +61,7 @@ class noised_waveform(object):
             n+=alpha*sample["Noise"][crop_noise:crop_noise+len(sample["Waveform"])]
         snr = np.random.uniform(self.snr[0],self.snr[1])
         snr=(10**(snr/10))
+        sample["snr"]=snr
         Pu=np.sum(np.abs(n/sum_alpha)**2)
         Ps=np.sum(np.abs(sample["Waveform"])**2)
         attenuation_noise=np.sqrt(Ps/(Pu*snr)) 
